@@ -131,6 +131,28 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 width: 100%;
             }
 
+            @media (max-width: 768px) {
+                body {
+                    padding: 0;
+                    align-items: stretch;
+                }
+
+                .card {
+                    border-radius: 0;
+                    max-width: 100%;
+                    height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: start;
+                }
+            }
+
             .banner-container {
                 width: 100%;
                 height: 180px;
