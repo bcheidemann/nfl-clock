@@ -3,52 +3,57 @@ import z from "zod";
 import { teams } from "../../teams";
 
 export async function getStaticPaths() {
+    // Fetch schedule once for all teams
+    const response = await fetch(
+        `https://api.sportsblaze.com/nfl/v1/schedule/season/2025.json?key=${import.meta.env.SPORTS_BLAZE_API_KEY}`,
+    );
+
+    if (!response.ok) {
+        throw Error(
+            `[${response.status}] Error fetching schedule: ${await response.text().catch(() => null)}`,
+        );
+    }
+
+    const allGames = z
+        .object({
+            games: z.array(
+                z.object({
+                    season: z.object({
+                        type: z.string(),
+                    }),
+                    teams: z.object({
+                        away: z.object({
+                            name: z.string(),
+                        }),
+                        home: z.object({
+                            name: z.string(),
+                        }),
+                    }),
+                    date: z.coerce.date(),
+                    status: z.string(),
+                }),
+            ),
+        })
+        .parse(await response.json());
+
     return teams.map((team) => ({
         params: {
             id: team.id,
+        },
+        props: {
+            allGames,
         },
     }));
 }
 
 const { id } = Astro.params;
+const { allGames } = Astro.props;
 
 const team = teams.find((team) => team.id === id);
 
 if (!team) {
     throw Error(`Missing team: ${id}`);
 }
-
-const response = await fetch(
-    `https://api.sportsblaze.com/nfl/v1/schedule/season/2025.json?key=${import.meta.env.SPORTS_BLAZE_API_KEY}`,
-);
-
-if (!response.ok) {
-    throw Error(
-        `[${response.status}] Error fetching schedule: ${await response.text().catch(() => null)}`,
-    );
-}
-
-const allGames = z
-    .object({
-        games: z.array(
-            z.object({
-                season: z.object({
-                    type: z.string(),
-                }),
-                teams: z.object({
-                    away: z.object({
-                        name: z.string(),
-                    }),
-                    home: z.object({
-                        name: z.string(),
-                    }),
-                }),
-                date: z.coerce.date(),
-                status: z.string(),
-            }),
-        ),
-    })
-    .parse(await response.json());
 
 const nextGame = allGames.games
     .filter(
