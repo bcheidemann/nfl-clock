@@ -336,5 +336,15 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
             updateCountdown();
             setInterval(updateCountdown, 1000);
         </script>
+
+        <script>
+            // Reload page every 24 hours to fetch fresh game data
+            setTimeout(
+                () => {
+                    window.location.reload();
+                },
+                24 * 60 * 60 * 1000,
+            ); // 24 hours in milliseconds
+        </script>
     </body>
 </html>
