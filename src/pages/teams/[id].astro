@@ -244,6 +244,31 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 color: #718096;
                 margin-top: 8px;
             }
+
+            .alarm-section {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 2px solid #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .alarm-checkbox {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+                accent-color: #667eea;
+            }
+
+            .alarm-label {
+                font-size: 14px;
+                color: #4a5568;
+                font-weight: 500;
+                cursor: pointer;
+                user-select: none;
+            }
         </style>
     </head>
     <body>
@@ -299,6 +324,18 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                     >
                         {gameDate} at {gameTime}
                     </div>
+                </div>
+
+                <div class="alarm-section">
+                    <input
+                        type="checkbox"
+                        id="alarm-checkbox"
+                        class="alarm-checkbox"
+                        data-team-id={team.id}
+                    />
+                    <label for="alarm-checkbox" class="alarm-label">
+                        Alert me 5 minutes before kickoff
+                    </label>
                 </div>
             </div>
         </div>
@@ -376,6 +413,52 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 },
                 24 * 60 * 60 * 1000,
             ); // 24 hours in milliseconds
+        </script>
+
+        <script>
+            // Alarm audio playback for testing
+            const alarmCheckbox = document.getElementById(
+                "alarm-checkbox",
+            ) as HTMLInputElement;
+            const teamId = alarmCheckbox.getAttribute("data-team-id")!;
+            let alarmAudio: HTMLAudioElement;
+
+            // Check if team-specific alarm exists, otherwise use default
+            async function initializeAlarm() {
+                const teamAlarmPath = `/${teamId}/alarm.mp3`;
+                const defaultAlarmPath = "/alarm.mp3";
+
+                try {
+                    const response = await fetch(teamAlarmPath, {
+                        method: "HEAD",
+                    });
+                    if (response.ok) {
+                        alarmAudio = new Audio(teamAlarmPath);
+                    } else {
+                        alarmAudio = new Audio(defaultAlarmPath);
+                    }
+                } catch {
+                    alarmAudio = new Audio(defaultAlarmPath);
+                }
+            }
+
+            initializeAlarm();
+
+            alarmCheckbox.addEventListener("change", (e) => {
+                if ((e.target as HTMLInputElement).checked) {
+                    if (alarmAudio) {
+                        alarmAudio.currentTime = 0; // Reset to start
+                        alarmAudio.play().catch((error) => {
+                            console.error("Failed to play alarm:", error);
+                        });
+                    }
+                } else {
+                    if (alarmAudio) {
+                        alarmAudio.pause();
+                        alarmAudio.currentTime = 0;
+                    }
+                }
+            });
         </script>
     </body>
 </html>
