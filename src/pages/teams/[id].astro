@@ -95,14 +95,10 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>NFL Clock - {team.name}</title>
-        <link
-            rel="icon"
-            type="image/x-icon"
-            href={`/nfl-clock/${team.id}/logo.png`}
-        />
+        <link rel="icon" type="image/x-icon" href={`/${team.id}/logo.png`} />
         <style
             define:vars={{
-                bannerUrl: `url("/nfl-clock/${team.id}/banner.png")`,
+                bannerUrl: `url("/${team.id}/banner.png")`,
             }}
         >
             * {
@@ -254,7 +250,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
         <div class="card">
             <div class="banner-container">
                 <img
-                    src={`/nfl-clock/${team.id}/logo.png`}
+                    src={`/${team.id}/logo.png`}
                     alt={`${team.name} logo`}
                     class="logo"
                 />
