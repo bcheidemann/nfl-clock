@@ -5,11 +5,187 @@
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
-        <title>NFL Clock - All Teams</title>
+        <title>NFL Clock - Countdown to Your Team's Next Game</title>
+        <meta
+            name="description"
+            content="Track the time until your favorite NFL team's next game with NFL Clock. An unofficial fan-made countdown timer."
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #f5f5f0 0%, #e8e5f0 100%);
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    Oxygen, Ubuntu, Cantarell, sans-serif;
+                padding: 40px 20px;
+            }
+
+            .sr-only {
+                position: absolute;
+                left: -10000px;
+                top: auto;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+            }
+
+            .container {
+                max-width: 800px;
+                width: 100%;
+                text-align: center;
+            }
+
+            .logo {
+                width: 280px;
+                height: 120px;
+                margin: 0 auto 32px;
+            }
+
+            h1 {
+                font-size: 64px;
+                font-weight: 700;
+                color: #1a202c;
+                margin-bottom: 16px;
+                letter-spacing: -1.5px;
+            }
+
+            .tagline {
+                font-size: 20px;
+                color: #4a5568;
+                margin-bottom: 48px;
+                font-weight: 500;
+            }
+
+            .features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin: 48px 0;
+            }
+
+            .feature {
+                background: white;
+                padding: 32px 24px;
+                border-radius: 16px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .feature h3 {
+                color: #667eea;
+                margin-bottom: 12px;
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .feature p {
+                color: #718096;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            .cta-button {
+                display: inline-block;
+                background: #667eea;
+                color: white;
+                padding: 16px 48px;
+                border-radius: 12px;
+                text-decoration: none;
+                font-size: 18px;
+                font-weight: 600;
+                margin: 32px 0;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+
+            .cta-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+            }
+
+            .disclaimer {
+                margin-top: 64px;
+                padding: 24px;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                font-size: 13px;
+                color: #718096;
+                line-height: 1.6;
+                text-align: left;
+            }
+
+            .disclaimer strong {
+                color: #4a5568;
+            }
+
+            @media (max-width: 768px) {
+                body {
+                    padding: 32px 20px;
+                }
+
+                h1 {
+                    font-size: 48px;
+                }
+
+                .tagline {
+                    font-size: 18px;
+                }
+
+                .features {
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                }
+
+                .cta-button {
+                    font-size: 16px;
+                    padding: 14px 36px;
+                }
+            }
+        </style>
     </head>
     <body>
-        <body>
-            <a href="/teams">Teams</a>
-        </body>
+        <div class="container">
+            <img src="/logo.svg" alt="NFL Clock Logo" class="logo" />
+            <h1 class="sr-only">NFL Clock</h1>
+            <p class="tagline">
+                Never miss game time. Track the countdown to your team's next
+                game.
+            </p>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>All 32 Teams</h3>
+                    <p>Choose from any NFL team and see when they play next</p>
+                </div>
+                <div class="feature">
+                    <h3>Live Countdown</h3>
+                    <p>Real-time countdown clock to kickoff</p>
+                </div>
+                <div class="feature">
+                    <h3>Always Updated</h3>
+                    <p>Automatically shows the next scheduled game</p>
+                </div>
+            </div>
+
+            <a href="/teams" class="cta-button">Choose Your Team</a>
+
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> NFL Clock is an unofficial, fan-made
+                website and is not affiliated with, endorsed by, or connected to
+                the National Football League (NFL) or any of its teams. All team
+                names, logos, and trademarks are property of their respective owners.
+                This website is provided for informational and entertainment purposes
+                only under fair use principles.
+            </div>
+        </div>
     </body>
 </html>
