@@ -416,12 +416,17 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
         </script>
 
         <script>
-            // Alarm audio playback for testing
+            // Alarm functionality
             const alarmCheckbox = document.getElementById(
                 "alarm-checkbox",
             ) as HTMLInputElement;
             const teamId = alarmCheckbox.getAttribute("data-team-id")!;
+            const countdownElement = document.querySelector(".countdown")!;
+            const gameDate = new Date(
+                countdownElement.getAttribute("data-game-date")!,
+            );
             let alarmAudio: HTMLAudioElement;
+            let alarmTimeout: number | null = null;
 
             // Check if team-specific alarm exists, otherwise use default
             async function initializeAlarm() {
@@ -442,20 +447,51 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 }
             }
 
-            initializeAlarm();
+            function scheduleAlarm() {
+                // Clear any existing alarm timeout
+                if (alarmTimeout !== null) {
+                    clearTimeout(alarmTimeout);
+                    alarmTimeout = null;
+                }
 
-            alarmCheckbox.addEventListener("change", (e) => {
-                if ((e.target as HTMLInputElement).checked) {
-                    if (alarmAudio) {
-                        alarmAudio.currentTime = 0; // Reset to start
+                if (!alarmCheckbox.checked || !alarmAudio) {
+                    return;
+                }
+
+                const now = new Date().getTime();
+                const alarmTime = gameDate.getTime() - 5 * 60 * 1000; // 5 minutes before game
+                const timeUntilAlarm = alarmTime - now;
+
+                if (timeUntilAlarm > 0) {
+                    // Schedule the alarm
+                    alarmTimeout = window.setTimeout(() => {
+                        alarmAudio.currentTime = 0;
                         alarmAudio.play().catch((error) => {
                             console.error("Failed to play alarm:", error);
                         });
-                    }
+                    }, timeUntilAlarm);
+                } else if (timeUntilAlarm > -60 * 1000) {
+                    // If we're less than 1 minute past the alarm time, play it now
+                    alarmAudio.currentTime = 0;
+                    alarmAudio.play().catch((error) => {
+                        console.error("Failed to play alarm:", error);
+                    });
+                }
+            }
+
+            initializeAlarm().then(() => {
+                // Check alarm state on page load
+                scheduleAlarm();
+            });
+
+            alarmCheckbox.addEventListener("change", () => {
+                if (alarmCheckbox.checked) {
+                    scheduleAlarm();
                 } else {
-                    if (alarmAudio) {
-                        alarmAudio.pause();
-                        alarmAudio.currentTime = 0;
+                    // Cancel the scheduled alarm
+                    if (alarmTimeout !== null) {
+                        clearTimeout(alarmTimeout);
+                        alarmTimeout = null;
                     }
                 }
             });
