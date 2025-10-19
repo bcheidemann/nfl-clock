@@ -157,6 +157,37 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 align-items: center;
                 background-image: var(--bannerUrl);
                 background-size: cover;
+                position: relative;
+            }
+
+            .back-button {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                background: rgba(255, 255, 255, 0.9);
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                transition: all 0.2s ease;
+                text-decoration: none;
+                color: #4a5568;
+            }
+
+            .back-button:hover {
+                background: white;
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .back-button svg {
+                width: 20px;
+                height: 20px;
             }
 
             .banner {
@@ -277,6 +308,20 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
     <body>
         <div class="card">
             <div class="banner-container">
+                <a href="/teams" class="back-button" aria-label="Back to teams">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </a>
                 <img
                     src={`/${team.id}/logo.png`}
                     alt={`${team.name} logo`}
