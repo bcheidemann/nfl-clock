@@ -10,8 +10,7 @@
       {
         "url": "http://localhost:4321/teams",
         "title": "NFL Clock",
-        "width": 1280,
-        "height": 720
+        "fullscreen": true
       }
     ],
     "security": {
