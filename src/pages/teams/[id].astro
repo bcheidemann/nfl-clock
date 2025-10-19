@@ -269,6 +269,9 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 cursor: pointer;
                 user-select: none;
             }
+            .hidden {
+                display: none !important;
+            }
         </style>
     </head>
     <body>
@@ -326,7 +329,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                     </div>
                 </div>
 
-                <div class="alarm-section">
+                <div class="alarm-section hidden" id="alarm-section">
                     <input
                         type="checkbox"
                         id="alarm-checkbox"
@@ -417,6 +420,12 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
 
         <script>
             import { isTauri, invoke } from "@tauri-apps/api/core";
+
+            // Show alarm section only in Tauri
+            if (isTauri()) {
+                const alarmSection = document.getElementById("alarm-section")!;
+                alarmSection.classList.remove("hidden");
+            }
 
             // Alarm functionality
             const alarmCheckbox = document.getElementById(
