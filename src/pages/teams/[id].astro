@@ -416,6 +416,8 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
         </script>
 
         <script>
+            import { isTauri, invoke } from "@tauri-apps/api/core";
+
             // Alarm functionality
             const alarmCheckbox = document.getElementById(
                 "alarm-checkbox",
@@ -425,36 +427,20 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
             const gameDate = new Date(
                 countdownElement.getAttribute("data-game-date")!,
             );
-            let alarmAudio: HTMLAudioElement;
             let alarmTimeout: number | null = null;
 
-            // Check if team-specific alarm exists, otherwise use default
-            async function initializeAlarm() {
-                const teamAlarmPath = `/${teamId}/alarm.mp3`;
-                const defaultAlarmPath = "/alarm.mp3";
-
-                try {
-                    const response = await fetch(teamAlarmPath, {
-                        method: "HEAD",
-                    });
-                    if (response.ok) {
-                        alarmAudio = new Audio(teamAlarmPath);
-                    } else {
-                        alarmAudio = new Audio(defaultAlarmPath);
-                    }
-                } catch {
-                    alarmAudio = new Audio(defaultAlarmPath);
-                }
-            }
-
             function scheduleAlarm() {
+                if (!isTauri()) {
+                    return;
+                }
+
                 // Clear any existing alarm timeout
                 if (alarmTimeout !== null) {
                     clearTimeout(alarmTimeout);
                     alarmTimeout = null;
                 }
 
-                if (!alarmCheckbox.checked || !alarmAudio) {
+                if (!alarmCheckbox.checked) {
                     return;
                 }
 
@@ -464,25 +450,17 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
 
                 if (timeUntilAlarm > 0) {
                     // Schedule the alarm
-                    alarmTimeout = window.setTimeout(() => {
-                        alarmAudio.currentTime = 0;
-                        alarmAudio.play().catch((error) => {
-                            console.error("Failed to play alarm:", error);
-                        });
-                    }, timeUntilAlarm);
-                } else if (timeUntilAlarm > -60 * 1000) {
-                    // If we're less than 1 minute past the alarm time, play it now
-                    alarmAudio.currentTime = 0;
-                    alarmAudio.play().catch((error) => {
-                        console.error("Failed to play alarm:", error);
-                    });
+                    alarmTimeout = window.setTimeout(
+                        () => invoke("play_alarm"),
+                        timeUntilAlarm,
+                    );
+                } else if (timeUntilAlarm > -60 * 1000 * 5) {
+                    // If we're less than 5 minute past the alarm time, play it now
+                    invoke("play_alarm");
                 }
             }
 
-            initializeAlarm().then(() => {
-                // Check alarm state on page load
-                scheduleAlarm();
-            });
+            scheduleAlarm();
 
             alarmCheckbox.addEventListener("change", () => {
                 if (alarmCheckbox.checked) {
