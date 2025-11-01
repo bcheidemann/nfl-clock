@@ -10,7 +10,7 @@
       {
         "url": "https://nflclock.com/teams",
         "title": "NFL Clock",
-        "fullscreen": false,
+        "fullscreen": true,
         "theme": "Dark"
       }
     ],
