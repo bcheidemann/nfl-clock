@@ -3,9 +3,10 @@
   "app": {
     "windows": [
       {
-        "url": "https://nflclock.com/teams",
+        "url": "http://localhost:4321/teams",
         "title": "NFL Clock",
-        "fullscreen": true
+        "fullscreen": true,
+        "theme": "Dark"
       }
     ]
   }

@@ -8,9 +8,10 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "url": "http://localhost:4321/teams",
+        "url": "https://nflclock.com/teams",
         "title": "NFL Clock",
-        "fullscreen": true
+        "fullscreen": false,
+        "theme": "Dark"
       }
     ],
     "security": {
