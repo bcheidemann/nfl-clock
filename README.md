@@ -1,43 +1,8 @@
-# Astro Starter Kit: Minimal
+# NFL Clock
 
-```sh
-npm create astro@latest -- --template minimal
-```
+<img width="700" height="467" alt="Frame 2" src="https://github.com/user-attachments/assets/fcea3ec2-1e00-443c-ba7e-76c991b1e753" />
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+NFL Clock is a hobby project I developed to help keep track of when the next NFL game is on. It's designed to be embeddable in a low power microcomputer, but can also be viewed online at [nflclock.com](https://nflclock.com) (though the alarm clock feature only works with the native wrapper due to browser limitations).
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+> [!NOTE]
+> NFL Clock is an unofficial, fan-made website and is not affiliated with, endorsed by, or connected to the National Football League (NFL) or any of its teams. All team names, logos, and trademarks are property of their respective owners. This website is provided for informational and entertainment purposes only under fair use principles.
