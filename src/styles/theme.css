@@ -26,3 +26,34 @@
     --shadow-lg: rgba(0, 0, 0, 0.2);
     --shadow-xl: rgba(0, 0, 0, 0.3);
 }
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Background gradients */
+        --bg-gradient-start: #1a1a2e;
+        --bg-gradient-end: #16213e;
+
+        /* Text colors */
+        --text-primary: #f7fafc;
+        --text-secondary: #e2e8f0;
+        --text-muted: #cbd5e0;
+        --text-light: #a0aec0;
+
+        /* Accent colors */
+        --accent-primary: #818cf8;
+
+        /* Border colors */
+        --border-light: #2d3748;
+
+        /* Background colors */
+        --bg-white: #1f2937;
+        --bg-white-overlay: rgba(31, 41, 55, 0.95);
+
+        /* Shadow colors */
+        --shadow-sm: rgba(0, 0, 0, 0.3);
+        --shadow-md: rgba(0, 0, 0, 0.4);
+        --shadow-lg: rgba(0, 0, 0, 0.5);
+        --shadow-xl: rgba(0, 0, 0, 0.6);
+    }
+}
