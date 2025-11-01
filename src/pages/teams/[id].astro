@@ -67,27 +67,38 @@ const nextGame = allGames.games
     )
     .at(0);
 
-if (!nextGame) {
-    throw Error(`No next game for team ${id}: ${JSON.stringify(allGames)}`);
-}
+const getGameDetails = () => {
+    if (!nextGame) {
+        return null;
+    }
 
-let opponent: string =
-    nextGame.teams.home.name === team.name
-        ? nextGame.teams.away.name
-        : nextGame.teams.home.name;
+    let opponent: string =
+        nextGame.teams.home.name === team.name
+            ? nextGame.teams.away.name
+            : nextGame.teams.home.name;
 
-// Format game date/time
-const gameDate = nextGame.date.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-});
-const gameTime = nextGame.date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    timeZoneName: "short",
-});
+    const gameDate = nextGame.date.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+
+    const gameTime = nextGame.date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+    });
+
+    return {
+        ...nextGame,
+        opponent,
+        gameDate,
+        gameTime,
+    };
+};
+
+const gameDetails = getGameDetails();
 ---
 
 <!doctype html>
@@ -354,7 +365,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
 
                 <div
                     class="countdown"
-                    data-game-date={nextGame.date.toISOString()}
+                    data-game-date={gameDetails?.date.toISOString()}
                 >
                     <div class="countdown-item">
                         <div class="countdown-value" id="countdown-days">
@@ -383,12 +394,18 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 </div>
 
                 <div class="game-info">
-                    <div class="opponent">vs. {opponent}</div>
+                    <div class="opponent">
+                        vs. {gameDetails?.opponent ?? "Unknown Opponent"}
+                    </div>
                     <div
                         class="game-time"
-                        data-game-date={nextGame.date.toISOString()}
+                        data-game-date={gameDetails?.date?.toISOString()}
                     >
-                        {gameDate} at {gameTime}
+                        {
+                            gameDetails
+                                ? `${gameDetails.gameDate} at ${gameDetails.gameTime}`
+                                : "No games scheduled. Check back later."
+                        }
                     </div>
                 </div>
 
@@ -405,80 +422,78 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 </div>
             </div>
         </div>
+
         <script>
             // Render game time in user's local timezone
             const gameTimeElement = document.querySelector(".game-time")!;
-            const gameDate = new Date(
-                gameTimeElement.getAttribute("data-game-date")!,
-            );
+            const dataGameDate = gameTimeElement.getAttribute("data-game-date");
 
-            const formattedDate = gameDate.toLocaleDateString("en-US", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            });
-            const formattedTime = gameDate.toLocaleTimeString("en-US", {
-                hour: "numeric",
-                minute: "2-digit",
-                timeZoneName: "short",
-            });
+            if (dataGameDate) {
+                const gameDate = new Date(dataGameDate);
 
-            gameTimeElement.textContent = `${formattedDate} at ${formattedTime}`;
+                const formattedDate = gameDate.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                });
+
+                const formattedTime = gameDate.toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    timeZoneName: "short",
+                });
+                console.log("Loading...");
+
+                gameTimeElement.textContent = `${formattedDate} at ${formattedTime}`;
+            }
         </script>
 
         <script>
             // Dynamic countdown timer
             const countdownElement = document.querySelector(".countdown")!;
-            const targetDate = new Date(
-                countdownElement.getAttribute("data-game-date")!,
-            );
+            const dataGameDate =
+                countdownElement.getAttribute("data-game-date");
 
-            const daysEl = document.getElementById("countdown-days")!;
-            const hoursEl = document.getElementById("countdown-hours")!;
-            const minutesEl = document.getElementById("countdown-minutes")!;
-            const secondsEl = document.getElementById("countdown-seconds")!;
+            if (dataGameDate) {
+                const targetDate = new Date(dataGameDate);
 
-            function updateCountdown() {
-                const now = new Date().getTime();
-                const distance = targetDate.getTime() - now;
+                const daysEl = document.getElementById("countdown-days")!;
+                const hoursEl = document.getElementById("countdown-hours")!;
+                const minutesEl = document.getElementById("countdown-minutes")!;
+                const secondsEl = document.getElementById("countdown-seconds")!;
 
-                if (distance < 0) {
-                    daysEl.textContent = "0";
-                    hoursEl.textContent = "0";
-                    minutesEl.textContent = "0";
-                    secondsEl.textContent = "0";
-                    return;
+                function updateCountdown() {
+                    const now = new Date().getTime();
+                    const distance = targetDate.getTime() - now;
+
+                    if (distance < 0) {
+                        daysEl.textContent = "0";
+                        hoursEl.textContent = "0";
+                        minutesEl.textContent = "0";
+                        secondsEl.textContent = "0";
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor(
+                        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+                    );
+                    const minutes = Math.floor(
+                        (distance % (1000 * 60 * 60)) / (1000 * 60),
+                    );
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    daysEl.textContent = days.toString().padStart(2, "0");
+                    hoursEl.textContent = hours.toString().padStart(2, "0");
+                    minutesEl.textContent = minutes.toString().padStart(2, "0");
+                    secondsEl.textContent = seconds.toString().padStart(2, "0");
                 }
 
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor(
-                    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-                );
-                const minutes = Math.floor(
-                    (distance % (1000 * 60 * 60)) / (1000 * 60),
-                );
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                daysEl.textContent = days.toString().padStart(2, "0");
-                hoursEl.textContent = hours.toString().padStart(2, "0");
-                minutesEl.textContent = minutes.toString().padStart(2, "0");
-                secondsEl.textContent = seconds.toString().padStart(2, "0");
+                // Update immediately and then every second
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
             }
-
-            // Update immediately and then every second
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        </script>
-
-        <script>
-            // Reload page every 24 hours to fetch fresh game data
-            setTimeout(
-                () => {
-                    window.location.reload();
-                },
-                24 * 60 * 60 * 1000,
-            ); // 24 hours in milliseconds
         </script>
 
         <script>
@@ -545,6 +560,16 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                     }
                 }
             });
+        </script>
+
+        <script>
+            // Reload page every 24 hours to fetch fresh game data
+            setTimeout(
+                () => {
+                    window.location.reload();
+                },
+                24 * 60 * 60 * 1000,
+            ); // 24 hours in milliseconds
         </script>
     </body>
 </html>
