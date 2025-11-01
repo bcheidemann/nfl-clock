@@ -166,10 +166,16 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 position: relative;
             }
 
-            .back-button {
+            .back-button-tap-area {
                 position: absolute;
                 top: 20px;
                 left: 20px;
+                /* Increase tap target without increasing visual size */
+                padding: 32px;
+                margin: -32px;
+            }
+
+            .back-button {
                 background: var(--bg-white-overlay);
                 border: none;
                 border-radius: 50%;
@@ -185,7 +191,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 color: var(--text-secondary);
             }
 
-            .back-button:hover {
+            .back-button-tap-area:hover .back-button {
                 background: var(--bg-white);
                 box-shadow: 0 6px 16px var(--shadow-lg);
                 transform: translateY(-2px);
@@ -312,19 +318,25 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
     <body>
         <div class="card">
             <div class="banner-container">
-                <a href="/teams" class="back-button" aria-label="Back to teams">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 19l-7-7 7-7"></path>
-                    </svg>
+                <a
+                    href="/teams"
+                    class="back-button-tap-area"
+                    aria-label="Back to teams"
+                >
+                    <div class="back-button">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </div>
                 </a>
                 <Image
                     src={`/teams/${team.id}/logo.png`}
