@@ -11,7 +11,7 @@ import { teams } from "../../teams";
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
         <title>NFL Clock - All Teams</title>
-        <link rel="stylesheet" href="/src/styles/theme.css" />
+        <link rel="stylesheet" href="/styles/theme.css" />
         <style>
             * {
                 margin: 0;
@@ -39,7 +39,7 @@ import { teams } from "../../teams";
 
             h1 {
                 text-align: center;
-                font-size: 48px;
+                font-size: var(--font-3xl);
                 font-weight: 700;
                 color: var(--text-primary);
                 margin-bottom: 40px;
@@ -84,14 +84,14 @@ import { teams } from "../../teams";
             .team-name {
                 padding: 16px 12px;
                 text-align: center;
-                font-size: 14px;
+                font-size: var(--font-sm);
                 font-weight: 600;
                 color: var(--text-primary);
             }
 
             @media (max-width: 768px) {
                 h1 {
-                    font-size: 32px;
+                    font-size: var(--font-2xl);
                     margin-bottom: 24px;
                 }
 

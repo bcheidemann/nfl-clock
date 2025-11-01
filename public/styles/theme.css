@@ -25,6 +25,22 @@
     --shadow-md: rgba(0, 0, 0, 0.15);
     --shadow-lg: rgba(0, 0, 0, 0.2);
     --shadow-xl: rgba(0, 0, 0, 0.3);
+
+    /* Font sizes (1rem = 16px) */
+    --font-xs: 0.75rem; /* 12px */
+    --font-sm: 0.875rem; /* 14px */
+    --font-base: 1rem; /* 16px */
+    --font-lg: 1.125rem; /* 18px */
+    --font-xl: 1.75rem; /* 28px */
+    --font-2xl: 2rem; /* 32px */
+    --font-3xl: 3rem; /* 48px */
+}
+
+/* Tablet breakpoint */
+@media (min-width: 481px) and (max-width: 769px) and (orientation: portrait) {
+    html {
+        font-size: 22px; /* Increases rem base from 16px to 18px */
+    }
 }
 
 /* Dark Mode */
