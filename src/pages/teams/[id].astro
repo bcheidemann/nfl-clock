@@ -177,6 +177,12 @@ const gameDetails = getGameDetails();
                 position: relative;
             }
 
+            @media (min-width: 480px) and (max-width: 769px) {
+                .banner-container {
+                    height: 280px;
+                }
+            }
+
             .back-button-tap-area {
                 position: absolute;
                 top: 20px;
@@ -227,6 +233,13 @@ const gameDetails = getGameDetails();
                 object-fit: contain;
             }
 
+            @media (min-width: 480px) and (max-width: 769px) {
+                .logo {
+                    width: 135px;
+                    height: 135px;
+                }
+            }
+
             .content {
                 background: var(--bg-white);
                 padding: 40px 30px 30px;
@@ -239,6 +252,12 @@ const gameDetails = getGameDetails();
                 color: var(--text-primary);
                 margin-bottom: 20px;
                 letter-spacing: -0.5px;
+            }
+
+            @media (min-width: 480px) and (max-width: 769px) {
+                .team-name {
+                    font-size: var(--font-2xl);
+                }
             }
 
             .countdown-label {
