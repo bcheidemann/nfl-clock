@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import { teams } from "../../teams";
 ---
 
@@ -51,15 +52,9 @@ import { teams } from "../../teams";
                 border-radius: 16px;
                 overflow: hidden;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease;
                 text-decoration: none;
                 color: inherit;
                 display: block;
-            }
-
-            .team-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
             }
 
             .team-banner {
@@ -74,8 +69,6 @@ import { teams } from "../../teams";
             }
 
             .team-logo {
-                width: 50px;
-                height: 50px;
                 background: white;
                 border-radius: 50%;
                 padding: 8px;
@@ -115,11 +108,13 @@ import { teams } from "../../teams";
                         <a href={`/teams/${team.id}`} class="team-card">
                             <div
                                 class="team-banner"
-                                style={`background-image: url('/${team.id}/banner.png')`}
+                                style={`background-image: url('/${team.id}/banner-w360.png')`}
                             >
-                                <img
+                                <Image
                                     src={`/${team.id}/logo.png`}
                                     alt={`${team.name} logo`}
+                                    width="50"
+                                    height="50"
                                     class="team-logo"
                                 />
                             </div>

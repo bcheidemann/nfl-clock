@@ -1,6 +1,7 @@
 ---
 import z from "zod";
 import { teams } from "../../teams";
+import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
     // Fetch schedule once for all teams
@@ -197,8 +198,6 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
             }
 
             .logo {
-                width: 90px;
-                height: 90px;
                 background: white;
                 border-radius: 50%;
                 padding: 12px;
@@ -322,9 +321,11 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                             d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </a>
-                <img
+                <Image
                     src={`/${team.id}/logo.png`}
                     alt={`${team.name} logo`}
+                    width="90"
+                    height="90"
                     class="logo"
                 />
             </div>
