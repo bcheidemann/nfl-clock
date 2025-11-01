@@ -97,6 +97,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>NFL Clock - {team.name}</title>
         <link rel="icon" type="image/x-icon" href={`/${team.id}/logo.png`} />
+        <link rel="stylesheet" href="/src/styles/theme.css" />
         <style
             define:vars={{
                 bannerUrl: `url("/${team.id}/banner.png")`,
@@ -113,7 +114,11 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #f5f5f0 0%, #e8e5f0 100%);
+                background: linear-gradient(
+                    135deg,
+                    var(--bg-gradient-start) 0%,
+                    var(--bg-gradient-end) 100%
+                );
                 font-family:
                     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                     Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -122,7 +127,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
 
             .card {
                 border-radius: 20px;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 20px 60px var(--shadow-xl);
                 overflow: hidden;
                 max-width: 500px;
                 width: 100%;
@@ -165,7 +170,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 position: absolute;
                 top: 20px;
                 left: 20px;
-                background: rgba(255, 255, 255, 0.9);
+                background: var(--bg-white-overlay);
                 border: none;
                 border-radius: 50%;
                 width: 40px;
@@ -174,15 +179,15 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 4px 12px var(--shadow-md);
                 transition: all 0.2s ease;
                 text-decoration: none;
-                color: #4a5568;
+                color: var(--text-secondary);
             }
 
             .back-button:hover {
-                background: white;
-                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+                background: var(--bg-white);
+                box-shadow: 0 6px 16px var(--shadow-lg);
                 transform: translateY(-2px);
             }
 
@@ -198,15 +203,15 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
             }
 
             .logo {
-                background: white;
+                background: var(--bg-white);
                 border-radius: 50%;
                 padding: 12px;
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 8px 24px var(--shadow-md);
                 object-fit: contain;
             }
 
             .content {
-                background: white;
+                background: var(--bg-white);
                 padding: 40px 30px 30px;
                 text-align: center;
             }
@@ -214,7 +219,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
             .team-name {
                 font-size: 28px;
                 font-weight: 700;
-                color: #1a202c;
+                color: var(--text-primary);
                 margin-bottom: 20px;
                 letter-spacing: -0.5px;
             }
@@ -224,7 +229,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 1px;
-                color: #718096;
+                color: var(--text-muted);
                 margin-bottom: 10px;
             }
 
@@ -244,7 +249,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
             .countdown-value {
                 font-size: 48px;
                 font-weight: 700;
-                color: #667eea;
+                color: var(--accent-primary);
                 line-height: 1;
                 margin-bottom: 8px;
             }
@@ -253,32 +258,32 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 font-size: 12px;
                 font-weight: 600;
                 text-transform: uppercase;
-                color: #a0aec0;
+                color: var(--text-light);
                 letter-spacing: 0.5px;
             }
 
             .game-info {
                 margin-top: 30px;
                 padding-top: 30px;
-                border-top: 2px solid #e2e8f0;
+                border-top: 2px solid var(--border-light);
             }
 
             .opponent {
                 font-size: 18px;
-                color: #4a5568;
+                color: var(--text-secondary);
                 font-weight: 500;
             }
 
             .game-time {
                 font-size: 14px;
-                color: #718096;
+                color: var(--text-muted);
                 margin-top: 8px;
             }
 
             .alarm-section {
                 margin-top: 20px;
                 padding-top: 20px;
-                border-top: 2px solid #e2e8f0;
+                border-top: 2px solid var(--border-light);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -289,12 +294,12 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                 width: 18px;
                 height: 18px;
                 cursor: pointer;
-                accent-color: #667eea;
+                accent-color: var(--accent-primary);
             }
 
             .alarm-label {
                 font-size: 14px;
-                color: #4a5568;
+                color: var(--text-secondary);
                 font-weight: 500;
                 cursor: pointer;
                 user-select: none;
