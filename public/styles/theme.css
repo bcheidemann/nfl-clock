@@ -37,7 +37,7 @@
 }
 
 /* Tablet breakpoint */
-@media (min-width: 481px) and (max-width: 769px) and (orientation: portrait) {
+@media (min-width: 480px) and (max-width: 769px) {
     html {
         font-size: 22px; /* Increases rem base from 16px to 18px */
     }
