@@ -100,7 +100,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
         <link rel="stylesheet" href="/styles/theme.css" />
         <style
             define:vars={{
-                bannerUrl: `url("/${team.id}/banner.png")`,
+                bannerUrl: `url("/teams/${team.id}/banner.png")`,
             }}
         >
             * {
@@ -327,7 +327,7 @@ const gameTime = nextGame.date.toLocaleTimeString("en-US", {
                     </svg>
                 </a>
                 <Image
-                    src={`/${team.id}/logo.png`}
+                    src={`/teams/${team.id}/logo.png`}
                     alt={`${team.name} logo`}
                     width="90"
                     height="90"
