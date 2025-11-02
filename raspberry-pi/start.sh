@@ -23,8 +23,9 @@ for ((i=1; i<=MAX_ATTEMPTS; i++)); do
     fi
 done
 
-echo "❌ No network connection after $MAX_ATTEMPTS attempts. Launching raspi-config..."
-sudo raspi-config
+echo "❌ No network connection after $MAX_ATTEMPTS attempts."
+
+read -p "Please configure a network connection. Once the network connection is configured, press enter to continue."
 
 for ((i=1; i<=MAX_ATTEMPTS; i++)); do
     echo "[$i/$MAX_ATTEMPTS] Waiting for connection..."
@@ -45,6 +46,8 @@ for ((i=1; i<=MAX_ATTEMPTS; i++)); do
     fi
 done
 
-echo "❌ No network connection after $MAX_ATTEMPTS attempts. Exiting to interactive terminal session..."
+echo "❌ No network connection after $MAX_ATTEMPTS attempts. Exiting..."
 
-bash
+sleep 3
+
+exit 1
