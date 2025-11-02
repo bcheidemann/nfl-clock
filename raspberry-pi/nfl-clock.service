@@ -1,0 +1,8 @@
+[Service]
+Type=oneshot
+RemainAfterExit=true
+StandardOutput=journal
+ExecStart=/usr/local/share/nfl-clock/raspberry-pi/start.sh
+
+[Install]
+WantedBy=graphical.target
