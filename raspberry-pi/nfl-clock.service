@@ -2,6 +2,7 @@
 Type=oneshot
 RemainAfterExit=true
 StandardOutput=journal
+WorkingDirectory=/usr/local/share/nfl-clock/raspberry-pi
 ExecStart=/usr/local/share/nfl-clock/raspberry-pi/start.sh
 
 [Install]
