@@ -12,7 +12,8 @@ for ((i=1; i<=MAX_ATTEMPTS; i++)); do
     echo "[$i/$MAX_ATTEMPTS] connectivity = $status"
 
     if [ "$status" = "full" ]; then
-        echo "✅ Internet connection detected."
+        echo "✅ Internet connection detected. Launching nfl-clock..."
+        sleep 3
         exit 0
     fi
 
@@ -32,8 +33,8 @@ for ((i=1; i<=MAX_ATTEMPTS; i++)); do
     echo "[$i/$MAX_ATTEMPTS] connectivity = $status"
 
     if [ "$status" = "full" ]; then
-        echo "✅ Internet connection detected."
-        sleep 2;
+        echo "✅ Internet connection detected. Launching nfl-clock..."
+        sleep 3;
         exit 0
     fi
 
