@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-MAX_ATTEMPTS=5
-DELAY=5
+MAX_ATTEMPTS=25
+DELAY=1
 
 for ((i=1; i<=MAX_ATTEMPTS; i++)); do
     echo "[$i/$MAX_ATTEMPTS] Checking network connection..."
