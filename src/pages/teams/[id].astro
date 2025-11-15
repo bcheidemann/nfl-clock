@@ -344,6 +344,25 @@ const gameDetails = getGameDetails();
                 cursor: pointer;
                 user-select: none;
             }
+
+            .preview-alarm-button {
+                background: transparent;
+                border: 1px solid var(--border-light);
+                border-radius: 8px;
+                padding: 6px 12px;
+                font-size: var(--font-xs);
+                color: var(--text-muted);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-weight: 500;
+                margin-left: 8px;
+            }
+
+            .preview-alarm-button:hover {
+                background: var(--bg-white-overlay);
+                border-color: var(--accent-primary);
+                color: var(--accent-primary);
+            }
             .hidden {
                 display: none !important;
             }
@@ -554,6 +573,14 @@ const gameDetails = getGameDetails();
                     <label for="alarm-checkbox" class="alarm-label">
                         Alert me 5 minutes before kickoff
                     </label>
+                    <button
+                        id="preview-alarm-button"
+                        class="preview-alarm-button"
+                        type="button"
+                        aria-label="Preview alarm"
+                    >
+                        Preview
+                    </button>
                 </div>
             </div>
         </div>
@@ -698,6 +725,14 @@ const gameDetails = getGameDetails();
                     ) as HTMLDialogElement;
                     dialog.close();
                     invoke("stop_alarm");
+                });
+
+                // Hook up preview alarm button
+                const previewAlarmButton = document.getElementById(
+                    "preview-alarm-button",
+                )!;
+                previewAlarmButton.addEventListener("click", () => {
+                    playAlarm();
                 });
 
                 function scheduleAlarm() {
