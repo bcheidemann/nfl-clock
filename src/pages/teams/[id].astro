@@ -347,9 +347,121 @@ const gameDetails = getGameDetails();
             .hidden {
                 display: none !important;
             }
+
+            /* Alarm Dialog Styles */
+            #alarm-dialog {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                margin: 0;
+                border: none;
+                border-radius: 24px;
+                padding: 50px 40px;
+                max-width: 450px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 30px 80px var(--shadow-xl);
+                background: var(--bg-white);
+                animation: modalPulse 0.4s ease-out;
+            }
+
+            @keyframes modalPulse {
+                0% {
+                    transform: translate(-50%, -50%) scale(0.8);
+                    opacity: 0;
+                }
+                50% {
+                    transform: translate(-50%, -50%) scale(1.05);
+                }
+                100% {
+                    transform: translate(-50%, -50%) scale(1);
+                    opacity: 1;
+                }
+            }
+
+            #alarm-dialog::backdrop {
+                background: rgba(0, 0, 0, 0.75);
+                backdrop-filter: blur(4px);
+                animation: backdropFadeIn 0.3s ease-out;
+            }
+
+            @keyframes backdropFadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .alarm-dialog-logo {
+                width: 100px;
+                height: 100px;
+                margin: 0 auto 24px;
+                display: block;
+                background: var(--accent-primary);
+                border-radius: 50%;
+                padding: 16px;
+                box-shadow:
+                    0 12px 32px var(--shadow-md),
+                    0 0 0 4px rgba(0, 0, 0, 0.05);
+            }
+
+            .alarm-dialog-title {
+                font-size: 2.5rem;
+                font-weight: 800;
+                color: var(--accent-primary);
+                margin-bottom: 12px;
+                letter-spacing: -1px;
+                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .alarm-dialog-subtitle {
+                font-size: var(--font-base);
+                color: var(--text-secondary);
+                margin-bottom: 32px;
+                font-weight: 500;
+            }
+
+            .alarm-dialog-button {
+                background: var(--accent-primary);
+                color: white;
+                border: none;
+                border-radius: 14px;
+                padding: 18px 48px;
+                font-size: var(--font-lg);
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .alarm-dialog-button:active {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            }
         </style>
     </head>
     <body>
+        <!-- Alarm Dialog -->
+        <dialog id="alarm-dialog">
+            <img
+                src={`/teams/${team.id}/logo.png`}
+                alt={`${team.name} logo`}
+                class="alarm-dialog-logo"
+            />
+            <h2 class="alarm-dialog-title">Game Time!</h2>
+            <p class="alarm-dialog-subtitle">
+                Your {team.name} game starts in 5 minutes!
+            </p>
+            <button id="stop-alarm-button" class="alarm-dialog-button">
+                Stop Alarm
+            </button>
+        </dialog>
+
         <div class="card">
             <div class="banner-container">
                 <a
@@ -571,7 +683,22 @@ const gameDetails = getGameDetails();
 
                 function playAlarm() {
                     invoke("play_alarm", { teamId });
+                    const dialog = document.getElementById(
+                        "alarm-dialog",
+                    ) as HTMLDialogElement;
+                    dialog.showModal();
                 }
+
+                // Hook up stop alarm button
+                const stopAlarmButton =
+                    document.getElementById("stop-alarm-button")!;
+                stopAlarmButton.addEventListener("click", () => {
+                    const dialog = document.getElementById(
+                        "alarm-dialog",
+                    ) as HTMLDialogElement;
+                    dialog.close();
+                    invoke("stop_alarm");
+                });
 
                 function scheduleAlarm() {
                     // Clear any existing alarm timeout
