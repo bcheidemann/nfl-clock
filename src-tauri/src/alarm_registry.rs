@@ -5,6 +5,12 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct TeamId(String);
 
+impl AsRef<str> for TeamId {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct AlarmRegistry {
     scheduled_alarms: HashSet<TeamId>,

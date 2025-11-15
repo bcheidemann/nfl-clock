@@ -569,6 +569,10 @@ const gameDetails = getGameDetails();
                     }
                 });
 
+                function playAlarm() {
+                    invoke("play_alarm", { teamId });
+                }
+
                 function scheduleAlarm() {
                     // Clear any existing alarm timeout
                     if (alarmTimeout !== null) {
@@ -588,13 +592,13 @@ const gameDetails = getGameDetails();
                         console.debug("Scheduling alarm.");
                         // Schedule the alarm
                         alarmTimeout = window.setTimeout(
-                            () => invoke("play_alarm"),
+                            playAlarm,
                             timeUntilAlarm,
                         );
                     } else if (timeUntilAlarm > -60 * 1000 * 5) {
                         console.debug("Playing alarm.");
                         // If we're less than 5 minute past the alarm time, play it now
-                        invoke("play_alarm");
+                        playAlarm();
                     }
                 }
             }

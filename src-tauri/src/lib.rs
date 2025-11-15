@@ -15,9 +15,12 @@ lazy_static! {
 }
 
 #[tauri::command]
-fn play_alarm() {
+fn play_alarm(team_id: TeamId) {
     AUDIO_SINK.clear();
-    let alarm_bytes = Cursor::new(include_bytes!("../assets/alarm.mp3").as_ref());
+    let alarm_bytes = match team_id.as_ref() {
+        "KC" => Cursor::new(include_bytes!("../assets/alarm-kc.mp3").as_ref()),
+        _ => Cursor::new(include_bytes!("../assets/alarm.mp3").as_ref()),
+    };
     let alarm = Decoder::new(alarm_bytes).unwrap();
     AUDIO_SINK.append(alarm);
     AUDIO_SINK.play();
