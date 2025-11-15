@@ -6,7 +6,9 @@
         "url": "http://localhost:4321/teams",
         "title": "NFL Clock",
         "fullscreen": false,
-        "theme": "Dark"
+        "theme": "Dark",
+        "width": 720,
+        "height": 1280
       }
     ]
   }

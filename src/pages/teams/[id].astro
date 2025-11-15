@@ -520,65 +520,80 @@ const gameDetails = getGameDetails();
 
             // Show alarm section only in Tauri
             if (isTauri()) {
+                setup();
+            }
+
+            async function setup() {
                 const alarmSection = document.getElementById("alarm-section")!;
                 alarmSection.classList.remove("hidden");
-            }
 
-            // Alarm functionality
-            const alarmCheckbox = document.getElementById(
-                "alarm-checkbox",
-            ) as HTMLInputElement;
-            const teamId = alarmCheckbox.getAttribute("data-team-id")!;
-            const countdownElement = document.querySelector(".countdown")!;
-            const gameDate = new Date(
-                countdownElement.getAttribute("data-game-date")!,
-            );
-            let alarmTimeout: number | null = null;
+                // Alarm functionality
+                const alarmCheckbox = document.getElementById(
+                    "alarm-checkbox",
+                ) as HTMLInputElement;
+                const teamId = alarmCheckbox.getAttribute("data-team-id")!;
+                const countdownElement = document.querySelector(".countdown")!;
+                const gameDate = new Date(
+                    countdownElement.getAttribute("data-game-date")!,
+                );
+                let alarmTimeout: number | null = null;
 
-            function scheduleAlarm() {
-                if (!isTauri()) {
-                    return;
+                const initialEnabled = await invoke<boolean>(
+                    "is_alarm_scheduled_for_team",
+                    { teamId },
+                );
+                if (initialEnabled) {
+                    alarmCheckbox.checked = true;
                 }
 
-                // Clear any existing alarm timeout
-                if (alarmTimeout !== null) {
-                    clearTimeout(alarmTimeout);
-                    alarmTimeout = null;
-                }
+                scheduleAlarm();
 
-                if (!alarmCheckbox.checked) {
-                    return;
-                }
+                alarmCheckbox.addEventListener("change", async () => {
+                    await invoke("set_alarm_scheduled_for_team", {
+                        teamId,
+                        scheduled: alarmCheckbox.checked,
+                    });
+                    if (alarmCheckbox.checked) {
+                        scheduleAlarm();
+                    } else {
+                        console.debug("Cancelling alarm.");
+                        // Cancel the scheduled alarm
+                        if (alarmTimeout !== null) {
+                            clearTimeout(alarmTimeout);
+                            alarmTimeout = null;
+                        }
+                    }
+                });
 
-                const now = new Date().getTime();
-                const alarmTime = gameDate.getTime() - 5 * 60 * 1000; // 5 minutes before game
-                const timeUntilAlarm = alarmTime - now;
-
-                if (timeUntilAlarm > 0) {
-                    // Schedule the alarm
-                    alarmTimeout = window.setTimeout(
-                        () => invoke("play_alarm"),
-                        timeUntilAlarm,
-                    );
-                } else if (timeUntilAlarm > -60 * 1000 * 5) {
-                    // If we're less than 5 minute past the alarm time, play it now
-                    invoke("play_alarm");
-                }
-            }
-
-            scheduleAlarm();
-
-            alarmCheckbox.addEventListener("change", () => {
-                if (alarmCheckbox.checked) {
-                    scheduleAlarm();
-                } else {
-                    // Cancel the scheduled alarm
+                function scheduleAlarm() {
+                    // Clear any existing alarm timeout
                     if (alarmTimeout !== null) {
                         clearTimeout(alarmTimeout);
                         alarmTimeout = null;
                     }
+
+                    if (!alarmCheckbox.checked) {
+                        return;
+                    }
+
+                    const now = new Date().getTime();
+                    const alarmTime = gameDate.getTime() - 5 * 60 * 1000; // 5 minutes before game
+                    const timeUntilAlarm = alarmTime - now;
+
+                    if (timeUntilAlarm > 0) {
+                        console.debug("Scheduling alarm.");
+                        // Schedule the alarm
+                        alarmTimeout = window.setTimeout(
+                            () => invoke("play_alarm"),
+                            timeUntilAlarm,
+                        );
+                    } else if (timeUntilAlarm > -60 * 1000 * 5) {
+                        console.debug("Playing alarm.");
+                        // If we're less than 5 minute past the alarm time, play it now
+                        invoke("play_alarm");
+                    }
                 }
-            });
+            }
         </script>
 
         <script>
