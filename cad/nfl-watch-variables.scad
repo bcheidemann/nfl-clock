@@ -1,9 +1,12 @@
 color_black_rubber = "#282828";
 
-board_width = 30;
-board_height = 37.12;
+board_width = 30.00 + 0.2;
+board_height = 37.50 + 0.2;
 board_depth = 1;
 board_corner_radius = 5;
+display_cable_cutout_width = 17.8;
+display_cable_cutout_depth = 0.8;
+display_cable_cutout_height = 2.0;
 
 usbc_port_width = 8.45;
 usbc_port_height = 2.66;

@@ -151,6 +151,7 @@ module battery() {
   cube(battery_dimensions);
 }
 
+
 module electronics() {
   translate([
     0,
@@ -382,9 +383,53 @@ module housing_strap_connectors() {
   housing_strap_connector();
 }
 
+module housing_electronics_support() {
+  color("red")
+  translate([
+    0,
+    0,
+    housing_base_depth,
+  ])
+  cylinder(
+    h = battery_dimensions[2] + battery_headroom + board_depth,
+    d = 3.45 * 1.1,
+    $fn = 16
+  );
+}
+
+module housing_electronics_supports() {
+  translate([
+    -board_width / 2 + 1.7 + 0.1,
+    -29 / 2,
+    0,
+  ])
+  housing_electronics_support();
+
+  translate([
+    -board_width / 2 + 1.7 + 0.1,
+    29 / 2,
+    0,
+  ])
+  housing_electronics_support();
+
+  translate([
+    board_width / 2 - 1.7 - 0.1,
+    -29 / 2,
+    0,
+  ])
+  housing_electronics_support();
+
+  translate([
+    board_width / 2 - 1.7 - 0.1,
+    29 / 2,
+    0,
+  ])
+  housing_electronics_support();
+}
+
 module housing_usbc_plug_cutout() {
   translate([
-    board_width/2 + housing_to_board_margin + housing_side_wall_depth - 0.4,
+    board_width/2 + housing_to_board_margin + 0.8,
     0,
     esp32_s3_depth + battery_dimensions[2] + battery_headroom + housing_base_depth - board_depth - usbc_port_height / 2,
   ])
@@ -449,16 +494,65 @@ module housing_button_cutouts() {
   housing_button_cutout();
 }
 
+module housing_display_cable_cutout() {
+  translate([
+    -display_cable_cutout_width/2,
+    board_height/2,
+    housing_depth - display_cable_cutout_height,
+  ])
+  intersection() {
+    cube([
+      display_cable_cutout_width,
+      display_cable_cutout_depth,
+      display_cable_cutout_height,
+    ]);
+    union() {
+      translate([
+        display_cable_cutout_depth,
+        0,
+        0,
+      ])
+      cube([
+        display_cable_cutout_width - display_cable_cutout_depth * 2,
+        display_cable_cutout_depth,
+        display_cable_cutout_height,
+      ]);
+      translate([
+        display_cable_cutout_depth,
+        0,
+        0,
+      ])
+      cylinder(
+        h = display_cable_cutout_height,
+        d = display_cable_cutout_depth * 2,
+        $fn = 24
+      );
+      translate([
+        display_cable_cutout_depth + display_cable_cutout_width - display_cable_cutout_depth * 2,
+        0,
+        0,
+      ])
+      cylinder(
+        h = display_cable_cutout_height,
+        d = display_cable_cutout_depth * 2,
+        $fn = 24
+      );
+    }
+  }
+}
+
 module housing() {
   difference() {
     union() {
       housing_sides();
       housing_base();
       housing_strap_connectors();
+      housing_electronics_supports();
     }
     color("red")
     housing_usbc_plug_cutout();
     housing_button_cutouts();
+    housing_display_cable_cutout();
   }
 }
 
@@ -520,7 +614,7 @@ module housing_buttons() {
   housing_button();
 }
 
-electronics();
+// electronics();
 
 color("red")
 render() {
@@ -532,14 +626,14 @@ render() {
   }
 }
 
-housing_buttons();
+// housing_buttons();
 
-translate([0, (housing_height / 2 + watch_strap_connector_radius + housing_to_strap_margin), 0])
-rotate([0, 0, 90])
-watch_strap_with_holes();
+// translate([0, (housing_height / 2 + watch_strap_connector_radius + housing_to_strap_margin), 0])
+// rotate([0, 0, 90])
+// watch_strap_with_holes();
 
-translate([0, -(housing_height / 2 + watch_strap_connector_radius + housing_to_strap_margin), 0])
-rotate([0, 0, 270])
-watch_strap_with_buckle();
+// translate([0, -(housing_height / 2 + watch_strap_connector_radius + housing_to_strap_margin), 0])
+// rotate([0, 0, 270])
+// watch_strap_with_buckle();
 
-// // %housing_usbc_plug_cutout();
+// %housing_usbc_plug_cutout();
