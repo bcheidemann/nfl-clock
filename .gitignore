@@ -41,5 +41,8 @@ lerna-debug.log*
 # Audacity
 *.aup3
 
+# CAD
+*.stl
+
 # Miscellaneous
 *.local
