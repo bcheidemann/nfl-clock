@@ -1,7 +1,7 @@
 import { defineCollection } from "astro:content";
 
-import { loadSchedule } from "./lib/schedule-sources";
-import { gameSchema } from "./lib/schedule-sources/schemas";
+import { loadSchedule } from "./lib/schedule";
+import { gameSchema } from "./lib/schedule/schemas";
 
 const schedule = defineCollection({
   loader: loadSchedule,

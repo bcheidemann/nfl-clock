@@ -36,6 +36,7 @@ const nextGame = allGames
     .filter(
         (game) => game.status !== "Final" && game.date.getTime() > Date.now(),
     )
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
     .at(0);
 
 const getGameDetails = () => {
