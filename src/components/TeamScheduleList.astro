@@ -38,7 +38,7 @@ const rows = teamGames.map((game) => {
 });
 ---
 
-<div class="schedule-panel">
+<div class="schedule-panel" id="schedule">
     <h2 class="schedule-header">Full Schedule</h2>
     {
         rows.length === 0 ? (
@@ -171,6 +171,7 @@ const rows = teamGames.map((game) => {
         .schedule-panel {
             width: 100%;
             border-radius: 0;
+            padding-bottom: 84px;
         }
 
         .schedule-list {

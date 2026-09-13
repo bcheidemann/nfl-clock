@@ -457,6 +457,44 @@ const gameDetails = getGameDetails();
                 transform: translateY(-1px);
                 box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
             }
+
+            .schedule-jump {
+                display: none;
+            }
+
+            @media (max-width: 900px) {
+                .schedule-jump {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    position: fixed;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+                    background: var(--bg-white-overlay);
+                    backdrop-filter: blur(8px);
+                    box-shadow: 0 -4px 16px var(--shadow-md);
+                    color: var(--text-secondary);
+                    font-size: var(--font-sm);
+                    font-weight: 600;
+                    text-decoration: none;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    z-index: 10;
+                }
+
+                .schedule-jump svg {
+                    width: 16px;
+                    height: 16px;
+                    transition: transform 0.2s ease;
+                }
+
+                .schedule-jump.is-at-schedule svg {
+                    transform: rotate(180deg);
+                }
+            }
         </style>
     </head>
     <body>
@@ -587,6 +625,59 @@ const gameDetails = getGameDetails();
                 highlightGameId={nextGame?.id}
             />
         </div>
+
+        <a href="#schedule" class="schedule-jump" id="schedule-jump">
+            <span class="schedule-jump-label">Schedule</span>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </a>
+
+        <script>
+            // Toggle the mobile schedule-jump bar between "Schedule" and "Back to top"
+            const scheduleJumpLink = document.getElementById(
+                "schedule-jump",
+            ) as HTMLAnchorElement;
+            const scheduleJumpLabel = scheduleJumpLink.querySelector(
+                ".schedule-jump-label",
+            )!;
+            const scheduleSection = document.getElementById("schedule")!;
+
+            const scheduleObserver = new IntersectionObserver(
+                ([entry]) => {
+                    const atSchedule = entry.isIntersecting;
+                    scheduleJumpLink.classList.toggle(
+                        "is-at-schedule",
+                        atSchedule,
+                    );
+                    scheduleJumpLink.href = atSchedule ? "#top" : "#schedule";
+                    scheduleJumpLabel.textContent = atSchedule
+                        ? "Back to Top"
+                        : "Schedule";
+                },
+                { threshold: 0 },
+            );
+            scheduleObserver.observe(scheduleSection);
+
+            scheduleJumpLink.addEventListener("click", (event) => {
+                event.preventDefault();
+                const target = scheduleJumpLink.classList.contains(
+                    "is-at-schedule",
+                )
+                    ? 0
+                    : scheduleSection.offsetTop;
+                window.scrollTo({ top: target, behavior: "smooth" });
+            });
+        </script>
 
         <script>
             // Render game time in user's local timezone
