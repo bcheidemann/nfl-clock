@@ -1,41 +1,12 @@
 ---
-import z from "zod";
 import { teams } from "../../teams";
 import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-    // Fetch schedule once for all teams
-    const response = await fetch(
-        `https://api.sportsblaze.com/nfl/v1/schedule/season/2025.json?key=${import.meta.env.SPORTS_BLAZE_API_KEY}`,
+    const allGames = (await getCollection("schedule")).map(
+        (entry) => entry.data,
     );
-
-    if (!response.ok) {
-        throw Error(
-            `[${response.status}] Error fetching schedule: ${await response.text().catch(() => null)}`,
-        );
-    }
-
-    const allGames = z
-        .object({
-            games: z.array(
-                z.object({
-                    season: z.object({
-                        type: z.string(),
-                    }),
-                    teams: z.object({
-                        away: z.object({
-                            name: z.string(),
-                        }),
-                        home: z.object({
-                            name: z.string(),
-                        }),
-                    }),
-                    date: z.coerce.date(),
-                    status: z.string(),
-                }),
-            ),
-        })
-        .parse(await response.json());
 
     return teams.map((team) => ({
         params: {
@@ -56,7 +27,7 @@ if (!team) {
     throw Error(`Missing team: ${id}`);
 }
 
-const nextGame = allGames.games
+const nextGame = allGames
     .filter(
         (game) =>
             game.teams.away.name === team.name ||
