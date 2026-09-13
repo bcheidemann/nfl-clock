@@ -92,8 +92,8 @@ export const nflverseSource: ScheduleSource = {
           id: row.game_id,
           season: { type: GAME_TYPE_NAMES[row.game_type] },
           teams: {
-            away: { name: row.away_team },
-            home: { name: row.home_team },
+            away: { name: row.away_team, score: row.away_score ?? undefined },
+            home: { name: row.home_team, score: row.home_score ?? undefined },
           },
           date: easternToDate(row.gameday, row.gametime),
           status: row.home_score !== null ? "Final" : "Scheduled",

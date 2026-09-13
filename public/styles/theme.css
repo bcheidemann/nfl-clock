@@ -13,6 +13,10 @@
     /* Accent colors */
     --accent-primary: #667eea;
 
+    /* Result colors */
+    --result-win: #38a169;
+    --result-loss: #e53e3e;
+
     /* Border colors */
     --border-light: #e2e8f0;
 
@@ -58,6 +62,10 @@
 
         /* Accent colors */
         --accent-primary: #818cf8;
+
+        /* Result colors */
+        --result-win: #48bb78;
+        --result-loss: #fc8181;
 
         /* Border colors */
         --border-light: #2d3748;

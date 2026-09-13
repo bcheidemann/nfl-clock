@@ -20,13 +20,30 @@ const rows = teamGames.map((game) => {
         day: "numeric",
     });
 
-    const timeLabel =
-        game.status === "Final"
-            ? "Final"
-            : game.date.toLocaleTimeString("en-US", {
-                  hour: "numeric",
-                  minute: "2-digit",
-              });
+    const teamScore = isHome ? game.teams.home.score : game.teams.away.score;
+    const opponentScore = isHome
+        ? game.teams.away.score
+        : game.teams.home.score;
+
+    const result =
+        game.status === "Final" &&
+        teamScore !== undefined &&
+        opponentScore !== undefined
+            ? teamScore > opponentScore
+                ? "win"
+                : teamScore < opponentScore
+                  ? "loss"
+                  : "tie"
+            : null;
+
+    const timeLabel = result
+        ? `${result === "win" ? "W" : result === "loss" ? "L" : "T"} ${teamScore}-${opponentScore}`
+        : game.status === "Final"
+          ? "Final"
+          : game.date.toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+            });
 
     return {
         id: game.id,
@@ -34,6 +51,7 @@ const rows = teamGames.map((game) => {
         opponent,
         dateLabel,
         timeLabel,
+        result,
     };
 });
 ---
@@ -62,7 +80,14 @@ const rows = teamGames.map((game) => {
                         </div>
                         <div class="schedule-row-meta">
                             <span class="schedule-date">{row.dateLabel}</span>
-                            <span class="schedule-time">{row.timeLabel}</span>
+                            <span
+                                class:list={[
+                                    "schedule-time",
+                                    row.result && `result-${row.result}`,
+                                ]}
+                            >
+                                {row.timeLabel}
+                            </span>
                         </div>
                     </li>
                 ))}
@@ -170,6 +195,18 @@ const rows = teamGames.map((game) => {
         font-size: var(--font-xs);
         font-weight: 600;
         color: var(--text-primary);
+    }
+
+    .schedule-time.result-win {
+        color: var(--result-win);
+    }
+
+    .schedule-time.result-loss {
+        color: var(--result-loss);
+    }
+
+    .schedule-time.result-tie {
+        color: var(--text-muted);
     }
 
     @media (max-width: 900px) {
