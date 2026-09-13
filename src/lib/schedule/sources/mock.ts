@@ -1,8 +1,6 @@
 import { teams } from "../../../teams";
+import { getCurrentSeasonYear } from "../season";
 import type { ScheduleSource } from "../types";
-
-const getSeasonYear = (now: Date): number =>
-  now.getMonth() >= 2 ? now.getFullYear() : now.getFullYear() - 1;
 
 const getFirstSundayOfSeptember = (year: number): Date => {
   const date = new Date(year, 8, 1, 13, 0, 0, 0);
@@ -42,7 +40,7 @@ export const mockSource: ScheduleSource = {
   name: "Mock",
   fetchGames: async () => {
     const now = new Date();
-    const seasonYear = getSeasonYear(now);
+    const seasonYear = getCurrentSeasonYear(now);
     const week1Date = getFirstSundayOfSeptember(seasonYear);
     const teamNames = teams.map((team) => team.name);
 

@@ -1,11 +1,13 @@
 import { SCHEDULE_SOURCE } from "astro:env/server";
 import { mockSource } from "./sources/mock";
+import { nflverseSource } from "./sources/nflverse";
 import { sportsBlazeSource } from "./sources/sportsblaze";
 import type { GameSchema, ScheduleSource } from "./types";
 
 const sourcesByName: Record<string, ScheduleSource> = {
   mock: mockSource,
   sportsblaze: sportsBlazeSource,
+  nflverse: nflverseSource,
 };
 
 const resolveSources = (): ScheduleSource[] => {

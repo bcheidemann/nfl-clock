@@ -11,6 +11,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@dsnp/parquetjs": "1.8.9",
     "@tauri-apps/api": "^2.8.0",
     "astro": "^7.3.2",
     "zod": "^3.25.76"
