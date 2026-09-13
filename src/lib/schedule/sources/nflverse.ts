@@ -1,4 +1,5 @@
 import parquet from "@dsnp/parquetjs";
+import { Temporal } from "temporal-polyfill";
 import { z } from "astro/zod";
 import { teams } from "../../../teams";
 import { getCurrentSeasonYear } from "../season";
@@ -52,25 +53,13 @@ const rowSchema = z.object({
   away_score: z.number().nullable(),
 });
 
-// gameday/gametime are wall-clock US/Eastern with no explicit offset. Guess the
-// UTC instant assuming the wall-clock digits are UTC, then correct using the
-// real America/New_York offset (handles DST) without a timezone library.
-const easternToDate = (gameday: string, gametime: string): Date => {
-  const [year, month, day] = gameday.split("-").map(Number);
-  const [hour, minute] = gametime.split(":").map(Number);
-  const naiveUtcMs = Date.UTC(year, month - 1, day, hour, minute);
-
-  const offsetName = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/New_York",
-    timeZoneName: "shortOffset",
-  })
-    .formatToParts(naiveUtcMs)
-    .find((part) => part.type === "timeZoneName")?.value;
-
-  const offsetHours = Number(offsetName?.match(/GMT([+-]\d+)/)?.[1]);
-
-  return new Date(naiveUtcMs - offsetHours * 60 * 60 * 1000);
-};
+// gameday/gametime are wall-clock US/Eastern with no explicit offset.
+const easternToDate = (gameday: string, gametime: string): Date =>
+  new Date(
+    Temporal.PlainDateTime.from(`${gameday}T${gametime}`)
+      .toZonedDateTime("America/New_York")
+      .epochMilliseconds,
+  );
 
 export const nflverseSource: ScheduleSource = {
   name: "Nflverse",
