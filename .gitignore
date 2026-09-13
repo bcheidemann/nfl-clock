@@ -44,5 +44,8 @@ lerna-debug.log*
 # CAD
 *.stl
 
+# Playwrigh
+.playwright-mcp/
+
 # Miscellaneous
 *.local

@@ -1,0 +1,181 @@
+---
+import type { GameSchema } from "../lib/schedule/types";
+
+interface Props {
+    team: { id: string; name: string };
+    games: GameSchema[];
+    highlightGameId?: string;
+}
+
+const { team, games, highlightGameId } = Astro.props;
+
+const teamGames = [...games].sort((a, b) => a.date.getTime() - b.date.getTime());
+
+const rows = teamGames.map((game) => {
+    const isHome = game.teams.home.name === team.name;
+    const opponent = isHome ? game.teams.away.name : game.teams.home.name;
+
+    const dateLabel = game.date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+    });
+
+    const timeLabel =
+        game.status === "Final"
+            ? "Final"
+            : game.date.toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+              });
+
+    return {
+        id: game.id,
+        isHome,
+        opponent,
+        dateLabel,
+        timeLabel,
+    };
+});
+---
+
+<div class="schedule-panel">
+    <h2 class="schedule-header">Full Schedule</h2>
+    {
+        rows.length === 0 ? (
+            <p class="empty-state">No games scheduled</p>
+        ) : (
+            <ul class="schedule-list">
+                {rows.map((row) => (
+                    <li
+                        class:list={[
+                            "schedule-row",
+                            { highlighted: row.id === highlightGameId },
+                        ]}
+                    >
+                        <div class="schedule-row-main">
+                            <span class="schedule-vs">
+                                {row.isHome ? "vs" : "@"}
+                            </span>
+                            <span class="schedule-opponent">
+                                {row.opponent}
+                            </span>
+                        </div>
+                        <div class="schedule-row-meta">
+                            <span class="schedule-date">{row.dateLabel}</span>
+                            <span class="schedule-time">{row.timeLabel}</span>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        )
+    }
+</div>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .schedule-panel {
+        background: var(--bg-white);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px var(--shadow-xl);
+        overflow: hidden;
+        width: 320px;
+        max-width: 100%;
+        padding: 24px 20px;
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+            Ubuntu, Cantarell, sans-serif;
+    }
+
+    .schedule-header {
+        font-size: var(--font-lg);
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        letter-spacing: -0.3px;
+    }
+
+    .empty-state {
+        font-size: var(--font-sm);
+        color: var(--text-muted);
+    }
+
+    .schedule-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .schedule-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 8px;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .schedule-row:last-child {
+        border-bottom: none;
+    }
+
+    .schedule-row.highlighted {
+        background: var(--bg-white-overlay);
+        border-radius: 10px;
+        box-shadow: inset 0 0 0 1px var(--accent-primary);
+    }
+
+    .schedule-row-main {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .schedule-vs {
+        font-size: var(--font-xs);
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
+    }
+
+    .schedule-opponent {
+        font-size: var(--font-sm);
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .schedule-row-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+    }
+
+    .schedule-date {
+        font-size: var(--font-xs);
+        color: var(--text-muted);
+    }
+
+    .schedule-time {
+        font-size: var(--font-xs);
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    @media (max-width: 900px) {
+        .schedule-panel {
+            width: 100%;
+            border-radius: 0;
+        }
+
+        .schedule-list {
+            max-height: none;
+            overflow-y: visible;
+        }
+    }
+</style>

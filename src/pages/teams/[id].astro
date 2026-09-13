@@ -2,6 +2,7 @@
 import { teams } from "../../teams";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import TeamScheduleList from "../../components/TeamScheduleList.astro";
 
 export async function getStaticPaths() {
     const allGames = (await getCollection("schedule")).map(
@@ -38,6 +39,12 @@ const nextGame = allGames
     )
     .sort((a, b) => a.date.getTime() - b.date.getTime())
     .at(0);
+
+const teamGames = allGames.filter(
+    (game) =>
+        game.teams.away.name === team.name ||
+        game.teams.home.name === team.name,
+);
 
 const getGameDetails = () => {
     if (!nextGame) {
@@ -112,33 +119,39 @@ const gameDetails = getGameDetails();
                 padding: 20px;
             }
 
+            .layout {
+                display: flex;
+                gap: 20px;
+                align-items: stretch;
+                justify-content: center;
+            }
+
             .card {
                 border-radius: 20px;
                 box-shadow: 0 20px 60px var(--shadow-xl);
                 overflow: hidden;
-                max-width: 500px;
-                width: 100%;
+                width: 500px;
+                max-width: 100%;
+                display: flex;
+                flex-direction: column;
             }
 
-            @media (max-width: 768px) {
+            @media (max-width: 900px) {
                 body {
                     padding: 0;
                     align-items: stretch;
                 }
 
-                .card {
-                    border-radius: 0;
-                    max-width: 100%;
-                    height: 100vh;
-                    display: flex;
+                .layout {
                     flex-direction: column;
+                    align-items: stretch;
+                    width: 100%;
                 }
 
-                .content {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: start;
+                .card {
+                    width: 100%;
+                    border-radius: 0;
+                    height: 100vh;
                 }
             }
 
@@ -153,7 +166,7 @@ const gameDetails = getGameDetails();
                 position: relative;
             }
 
-            @media (min-width: 480px) and (max-width: 769px) {
+            @media (min-width: 480px) and (max-width: 900px) {
                 .banner-container {
                     height: 280px;
                 }
@@ -209,7 +222,7 @@ const gameDetails = getGameDetails();
                 object-fit: contain;
             }
 
-            @media (min-width: 480px) and (max-width: 769px) {
+            @media (min-width: 480px) and (max-width: 900px) {
                 .logo {
                     width: 135px;
                     height: 135px;
@@ -220,6 +233,16 @@ const gameDetails = getGameDetails();
                 background: var(--bg-white);
                 padding: 40px 30px 30px;
                 text-align: center;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            @media (max-width: 900px) {
+                .content {
+                    justify-content: start;
+                }
             }
 
             .team-name {
@@ -230,7 +253,7 @@ const gameDetails = getGameDetails();
                 letter-spacing: -0.5px;
             }
 
-            @media (min-width: 480px) and (max-width: 769px) {
+            @media (min-width: 480px) and (max-width: 900px) {
                 .team-name {
                     font-size: var(--font-2xl);
                 }
@@ -453,108 +476,116 @@ const gameDetails = getGameDetails();
             </button>
         </dialog>
 
-        <div class="card">
-            <div class="banner-container">
-                <a
-                    href="/teams"
-                    class="back-button-tap-area"
-                    aria-label="Back to teams"
-                >
-                    <div class="back-button">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </div>
-                </a>
-                <Image
-                    src={`/teams/${team.id}/logo.png`}
-                    alt={`${team.name} logo`}
-                    width="90"
-                    height="90"
-                    class="logo"
-                />
-            </div>
-
-            <div class="content">
-                <h1 class="team-name">{team.name}</h1>
-
-                <div class="countdown-label">Next Game In</div>
-
-                <div
-                    class="countdown"
-                    data-game-date={gameDetails?.date.toISOString()}
-                >
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-days">
-                            --
-                        </div>
-                        <div class="countdown-unit">Days</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-hours">
-                            --
-                        </div>
-                        <div class="countdown-unit">Hours</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-minutes">
-                            --
-                        </div>
-                        <div class="countdown-unit">Minutes</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="countdown-seconds">
-                            --
-                        </div>
-                        <div class="countdown-unit">Seconds</div>
-                    </div>
-                </div>
-
-                <div class="game-info">
-                    <div class="opponent">
-                        vs. {gameDetails?.opponent ?? "Unknown Opponent"}
-                    </div>
-                    <div
-                        class="game-time"
-                        data-game-date={gameDetails?.date?.toISOString()}
+        <div class="layout">
+            <div class="card">
+                <div class="banner-container">
+                    <a
+                        href="/teams"
+                        class="back-button-tap-area"
+                        aria-label="Back to teams"
                     >
-                        {
-                            gameDetails
-                                ? `${gameDetails.gameDate} at ${gameDetails.gameTime}`
-                                : "No games scheduled. Check back later."
-                        }
-                    </div>
-                </div>
-
-                <div class="alarm-section hidden" id="alarm-section">
-                    <input
-                        type="checkbox"
-                        id="alarm-checkbox"
-                        class="alarm-checkbox"
-                        data-team-id={team.id}
+                        <div class="back-button">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </div>
+                    </a>
+                    <Image
+                        src={`/teams/${team.id}/logo.png`}
+                        alt={`${team.name} logo`}
+                        width="90"
+                        height="90"
+                        class="logo"
                     />
-                    <label for="alarm-checkbox" class="alarm-label">
-                        Alert me 5 minutes before kickoff
-                    </label>
-                    <button
-                        id="preview-alarm-button"
-                        class="preview-alarm-button"
-                        type="button"
-                        aria-label="Preview alarm"
+                </div>
+
+                <div class="content">
+                    <h1 class="team-name">{team.name}</h1>
+
+                    <div class="countdown-label">Next Game In</div>
+
+                    <div
+                        class="countdown"
+                        data-game-date={gameDetails?.date.toISOString()}
                     >
-                        Preview
-                    </button>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="countdown-days">
+                                --
+                            </div>
+                            <div class="countdown-unit">Days</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="countdown-hours">
+                                --
+                            </div>
+                            <div class="countdown-unit">Hours</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="countdown-minutes">
+                                --
+                            </div>
+                            <div class="countdown-unit">Minutes</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="countdown-seconds">
+                                --
+                            </div>
+                            <div class="countdown-unit">Seconds</div>
+                        </div>
+                    </div>
+
+                    <div class="game-info">
+                        <div class="opponent">
+                            vs. {gameDetails?.opponent ?? "Unknown Opponent"}
+                        </div>
+                        <div
+                            class="game-time"
+                            data-game-date={gameDetails?.date?.toISOString()}
+                        >
+                            {
+                                gameDetails
+                                    ? `${gameDetails.gameDate} at ${gameDetails.gameTime}`
+                                    : "No games scheduled. Check back later."
+                            }
+                        </div>
+                    </div>
+
+                    <div class="alarm-section hidden" id="alarm-section">
+                        <input
+                            type="checkbox"
+                            id="alarm-checkbox"
+                            class="alarm-checkbox"
+                            data-team-id={team.id}
+                        />
+                        <label for="alarm-checkbox" class="alarm-label">
+                            Alert me 5 minutes before kickoff
+                        </label>
+                        <button
+                            id="preview-alarm-button"
+                            class="preview-alarm-button"
+                            type="button"
+                            aria-label="Preview alarm"
+                        >
+                            Preview
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            <TeamScheduleList
+                team={team}
+                games={teamGames}
+                highlightGameId={nextGame?.id}
+            />
         </div>
 
         <script>
